@@ -19,7 +19,8 @@ def error_handler(error):
 def root():
     data_file = os.getenv('MYAPP_DATAFILE', "titanic.csv")
     df = pd.read_csv(data_file)
-    table = df.to_html(classes='mystyle', header=True, table_id="table")
+    df_youngest = df[df['Age'] > 18].sort_values('Age').head(10)
+    table = df_youngest.to_html(classes='mystyle', header=True, table_id="table")
     return render_template(TEMPLATE_FILE, table=table)
 
 
@@ -27,7 +28,8 @@ def root():
 def data_json():
     data_file = os.getenv('MYAPP_DATAFILE', "titanic.csv")
     df = pd.read_csv(data_file)
-    return Response(df.to_json(orient='records'),content_type="application/json; charset=utf-8" )
+    df_youngest = df[df['Age'] > 18].sort_values('Age').head(10)
+    return Response(df_youngest.to_json(orient='records'),content_type="application/json; charset=utf-8" )
         
 
 if __name__ == "__main__":
